@@ -7,5 +7,8 @@ class AbstractHandler(object):
         self.next_handler = handler
 
     def handle(self, request):
+        """
+        :param dict request:
+        """
         if self.next_handler is not None:
             self.next_handler.handle(request)

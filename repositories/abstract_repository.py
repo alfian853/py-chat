@@ -1,19 +1,32 @@
-from pymongo import MongoClient
+import entities
+
 from bson.objectid import ObjectId
-from entities import UserEntity
+from pymongo import MongoClient
+
+from env import Env
+
 
 class AbstractRepository:
+    mongo_connection = None
+
     def __init__(self, entity_name):
-        # client = MongoClient('mongodb://[user]:[password]@[host]:[port]')
-        client = MongoClient('mongodb://future:future@localhost:27017')
-        self.db = client.progjar[entity_name]
+
+        if AbstractRepository.mongo_connection is None:
+            # client = MongoClient('mongodb://[user]:[password]@[host]:[port]')
+            AbstractRepository.mongo_connection = MongoClient(
+                'mongodb://'+Env.mongodb_user+':'
+                +Env.mongodb_password+'@'
+                +Env.mongodb_host+':'
+                +str(Env.mongodb_port)
+            )
+        self.db = AbstractRepository.mongo_connection.progjar[entity_name]
 
     def find_by_id(self, id):
         return self.db.find_one({
             '_id': ObjectId(id)
         })
 
-    def save(self, entity_obj):
+    def save(self, entity_obj: entities.BaseEntity):
         if entity_obj.id is None:
             id = ObjectId()
             self.db.insert_one(entity_obj.get_data())
