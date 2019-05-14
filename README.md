@@ -44,7 +44,9 @@ Kata kunci yang digunakan antara lain,
 9. CHAT-GET-PRIVATE : Digunakan untuk menampilkan isi inbox dari obrolan yang belum difetch
 10. CHAT-GET-GROUP : Digunakan untuk menampilkan isi inbox dari obrolan grupp yang belum difetch. Obrolan hanya bisa diambil di grup dimana pengguna merupakan member dari grup.
 11. FILE-SEND-PRIVATE : Digunakan untuk bertukar file dengan pengguna lain
-12. FILE-SEND-GROUP : Digunakan untuk mengirim file dalam grup\
+12. FILE-SEND-GROUP : Digunakan untuk mengirim file dalam grup
+13. FILE-GET-PRIVATE : Digunakan untuk melakukan retrieve pada file yang dikirim oleh pengguna lain. 
+14. FILE-GET-GROUP : Digunakan untuk melakukan retrieve pada file yg dikirim di grup
 13. FRIEND-ADD : Digunakan untuk menjadikan pengguna lain sebagai teman
 14. FRIEND-DELETE : Digunakan untuk menghapus pengguna lain sebagai teman
 15. NOTIF-GET : Digunakan untuk menampilkan pesan-pesan yang belum di retrieve 
@@ -61,6 +63,8 @@ Argumen-argumen yang dibutuhkan untuk masing-masing kata kunci antara lain,
 8. CHAT-GROUP-GET [group_id]
 9. CHAT-GROUP-SEND [group_id] [pesan]
 10. FILE-PRIVATE-SEND [id_penggunateman] [path_file] [ukuran_file]
-11. FILE-GROUP-SEND [group_id] [kode_file] 
-12. FRIEND-ADD [nama_pengguna]
-14. FRIEND-DELETE [nama_pengguna]
+11. FILE-GROUP-SEND [group_id] [path_file] [ukuran_file]
+12. FILE-PRIVATE-GET [id_penggunateman] [kode_file]
+13. FILE-GROUP-GET [id_group] [kode_file]
+14. FRIEND-ADD [nama_pengguna]
+15. FRIEND-DELETE [nama_pengguna]
