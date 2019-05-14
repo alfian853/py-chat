@@ -55,7 +55,7 @@ class RequestBroker(threading.Thread):
                     self.handler_head.handle(request)
 
             except Exception as e:
-                traceback.print_exception(e)
+                # traceback.print_exception(e)
                 Session.send_response({
                     'status': 'failed',
                     'message': 'internal server error'
