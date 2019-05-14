@@ -23,7 +23,7 @@ class AuthHandler(AbstractHandler):
 
     def handle(self, request):
         command: str = request['COMMAND']
-        print(request)
+        # print(request)
         if command is None:
             Session.send_response({
                 'status': 'failed',

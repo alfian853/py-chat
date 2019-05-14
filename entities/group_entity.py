@@ -9,6 +9,7 @@ class GroupEntity(BaseEntity):
         self.join_request = []  # used if self.type == close
         self.members = []
         self.inbox = []
+        self.code = ''
 
     def get_data(self):
         return {
@@ -16,5 +17,6 @@ class GroupEntity(BaseEntity):
             'type': self.type,
             'join_request': self.join_request,
             'members': self.members,
-            'inbox': self.inbox
+            'inbox': self.inbox,
+            'code': self.code
         }
