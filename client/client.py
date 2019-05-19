@@ -5,7 +5,6 @@ import json
 
 # dummy client,
 from env import Env
-from session import Session
 
 
 class Client(threading.Thread):
@@ -35,9 +34,10 @@ class Client(threading.Thread):
                 request['username'] = commands[1]
                 request['password'] = commands[2]
             elif(commands[0] == "AUTH-LOGOUT"):
-                request['token'] = Session.token()
+                # request['token'] = Session.token()
                 request['COMMAND'] = commands[0]
-            
+            else:
+                request['COMMAND'] = commands[0]
             self.sock.sendall(json.dumps(request).encode('utf-8'))
 
 

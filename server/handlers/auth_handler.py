@@ -29,7 +29,7 @@ class AuthHandler(AbstractHandler):
                 'status': 'failed',
                 'message': 'unknown request format!'
             })
-
+        print('is auth : ',self._is_authenticated(request))
         sub_command = command.split('-')
         if sub_command[0] == 'AUTH':
             task = sub_command[1]
@@ -51,12 +51,15 @@ class AuthHandler(AbstractHandler):
     def _is_authenticated(self, request):
         """
         :param _socket.socket connection:
-        :param request:
+        :param request: dict
         :return:
         """
+        if 'token' not in request.keys():
+            return False
+
         token = request['token']
 
-        if token is None:
+        if token is None or token is '':
             return False
 
         return Session.token() == token
