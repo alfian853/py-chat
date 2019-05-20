@@ -41,10 +41,22 @@ class HttpServer:
 			if (method=='GET' or method=='POST' or method=='OPTIONS'):
 				object_address = j[1].strip()
 				return self.http_do(object_address)
+			elif(method=='HEAD'):
+				object_address = j[1].strip()
+				return self.http_head(object_address)
 			else:
 				return self.response(400,'Bad Request','',{})
 		except IndexError:
 			return self.response(400,'Bad Request','',{})
+
+	def http_head(self, object_address):
+		files = glob('./*')
+		thedir='.'
+		if thedir+object_address not in files:
+			return self.response(404,'Not Found','',{})
+		
+		return self.response(200,'OK','',{})
+
 
 	def http_do(self,object_address):
 		files = glob('./*')
