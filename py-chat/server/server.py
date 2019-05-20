@@ -1,12 +1,13 @@
 import asyncore
 import json
 import socket
+import threading
 import traceback
 
 from env import Env
 from handlers import AuthHandler
 from handlers import CoreHandler
-from session import Session
+from session import Session, SessionManager
 
 
 class Server(asyncore.dispatcher):
@@ -35,7 +36,8 @@ class RequestBroker(asyncore.dispatcher_with_send):
         self.address = address
         self.handler_head = None
         self.handler_tail = None
-        Session.set_connection(self.connection)
+        self.session = Session()
+        self.session.set_connection(self.connection)
 
     def push_back_handler(self, handler):
         if self.handler_head is None:
@@ -51,18 +53,20 @@ class RequestBroker(asyncore.dispatcher_with_send):
         print(request)
         try:
             if self.handler_head is not None:
-                self.handler_head.handle(request)
-        except Exception as e:
-            traceback.print_exception(e)
+                self.handler_head.handle(self.session, request)
+        except BaseException as e:
+            traceback.print_exc()
             raise e
 
     def handle_error(self):
         try:
-            Session.send_response({
+            self.session.send_response({
+                'FOR': None,
                 'status': 'failed',
                 'message': 'internal server error'
             })
         except:
+            SessionManager.del_from_list(self.session)
             self.close()
 
 

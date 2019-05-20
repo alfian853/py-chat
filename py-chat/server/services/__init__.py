@@ -1,2 +1,3 @@
 from services.group_service import GroupService
-from services.message_service import MessageService
+from services.chat_service import ChatService
+from services.contact_service import ContactService
