@@ -36,6 +36,8 @@ class Session:
 
     @staticmethod
     def send_response(response):
+        print('send > ')
+        print(response)
         if isinstance(response, dict):
             Session.connection().sendall(json.dumps(response).encode('utf-8'))
         else:

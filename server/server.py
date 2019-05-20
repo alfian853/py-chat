@@ -49,8 +49,12 @@ class RequestBroker(asyncore.dispatcher_with_send):
         data = self.connection.recv(1024)
         request = json.loads(data.decode('utf-8'))
         print(request)
-        if self.handler_head is not None:
-            self.handler_head.handle(request)
+        try:
+            if self.handler_head is not None:
+                self.handler_head.handle(request)
+        except Exception as e:
+            traceback.print_exception(e)
+            raise e
 
     def handle_error(self):
         try:

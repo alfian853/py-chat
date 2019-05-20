@@ -50,7 +50,6 @@ class AuthHandler(AbstractHandler):
 
     def _is_authenticated(self, request):
         """
-        :param _socket.socket connection:
         :param request: dict
         :return:
         """
