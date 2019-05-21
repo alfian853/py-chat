@@ -12,6 +12,7 @@ class GroupEntity(BaseEntity):
 
     def get_data(self):
         return {
+            'name': self.group_name,
             'admin': self.admins,
             'members': self.members,
             'inbox': self.inbox,

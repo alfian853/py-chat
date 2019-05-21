@@ -1,4 +1,5 @@
 import socket
+import sys
 
 from activities import AbstractActivity, GroupChatActivity
 from activities.activity_container import ActivityContainer
@@ -39,7 +40,19 @@ class GroupMenuActivity(AbstractActivity):
         args = args.split(' ')
 
         if args[0] == 'create':
-            pass
+            print('args: ' + str(args[0:]))
+            if args[2] is None:
+                self.send_request({
+                    'COMMAND': 'GROUP-CREATE',
+                    'group_name': args[1]
+                    })
+            else: # check if group code available
+                # print ('code client:' + str(args[2]))
+                self.send_request({
+                    'COMMAND': 'GROUP-CREATE',
+                    'group_name': args[1],
+                    'code': args[2]
+                    })
 
         elif args[0] == 'get':
             self.send_request({
@@ -66,7 +79,6 @@ class GroupMenuActivity(AbstractActivity):
             })
         elif args[0] == 'back':
             self.go_to_prev_activity()
-
         else:
             self.show_menu()
 
@@ -79,4 +91,6 @@ class GroupMenuActivity(AbstractActivity):
                 for group in self.groups:
                     print(str(i)+'.', group['group_name'])
             elif response['FOR'] == 'GROUP-INVITE':
+                print(response['message'])
+            elif response['FOR'] == 'GROUP-CREATE':
                 print(response['message'])

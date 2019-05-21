@@ -16,6 +16,8 @@ class GroupService:
             self._handle_invite(session, request)
         elif commands[0] == 'GET':
             self._get_group_list(session, request)
+        elif commands[0] == 'CREATE':
+            self._create_group(session, request)
 
     def _handle_invite(self, session, request):
         pass
@@ -26,3 +28,23 @@ class GroupService:
             'FOR': 'GROUP-GET',
             'group_list': user_entity.group_list
         })
+    def _create_group(self, session: Session, request):
+        user = [session.user.username]
+
+        group = GroupEntity()
+        group.group_name = request['group_name']
+        if request['code'] is not None:
+            group.code = request['code']
+            print('HEE CODE NYA ADA')
+        group.admins = user
+        group.members = user
+        print (group.get_data)
+        self.group_repository.save(group)
+
+        session.send_response({
+            'FOR': request['COMMAND'],
+            'status': 'success',
+            'message': 'group has been created'
+        });
+
+

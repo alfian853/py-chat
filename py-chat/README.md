@@ -20,8 +20,8 @@ Server harus merespon semua request klien yang tidak valid dengan status "failed
 
 ## Sisi Activity Client
 1. Menu autorisasi
-- login <username> <password>
-- register <username> <password> <retyped-password>
+- login [username] [password]
+- register [username] [password] [retyped-password]
 - logout
 
 2. Menu Utama
@@ -32,15 +32,15 @@ Server harus merespon semua request klien yang tidak valid dengan status "failed
 
 3. Menu Kontak
 - get -> menampilkan daftar kontak teman
-- add <username> -> menambahkan teman ke kontak
-- del <username> -> menghapus teman dari kontak
-- chat <username> -> membuka personal chat dengan teman
+- add [username] -> menambahkan teman ke kontak
+- del [username] -> menghapus teman dari kontak
+- chat [username] -> membuka personal chat dengan teman
 - back -> kembali ke menu utama
 
 4. Menu Grup
-- create <group-name> -> membuat grup baru
+- create [group-name] [group-code (optional)]-> membuat grup baru
 - get -> mendapatkan daftar grup yang telah tergabung
-- chat <nomor-group dalam daftar> -> masuk ke group chat
+- chat [nomor-group dalam daftar] -> masuk ke group chat
 - back -> kembali ke menu utama
 
 ### Sesi Autorisasi
