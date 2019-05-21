@@ -24,7 +24,9 @@ class SessionManager:
 
     @staticmethod
     def del_from_list(session):
-        SessionManager.session_list.remove(session)
+        if session in SessionManager.session_list:
+            SessionManager.session_list.remove(session)
+
 
 class Session:
     connection: socket.socket
