@@ -56,7 +56,7 @@ class PrivateChatActivity(AbstractActivity, Notifiable):
             self._init_file_send_request()
 
         elif args[0] == 'get_file':
-            self.
+            self._init_get_file_request(args[1])
             pass
         elif args[0] == 'back':
             self.go_to_prev_activity()
@@ -77,7 +77,11 @@ class PrivateChatActivity(AbstractActivity, Notifiable):
             elif response['FOR'] == 'FILE-PRIVATE-SEND':
                 if response['status'] == 'ready':
                     self._send_file()
-
+            elif response['FOR'] == 'FILE-PRIVATE-GET':
+                if response['status'] == 'success':
+                    self._download_file(response)
+                else:
+                    print(response['message'])
             else:
                 print(response)
 
@@ -104,6 +108,29 @@ class PrivateChatActivity(AbstractActivity, Notifiable):
         request['file_size'] = os.path.getsize(self.last_file_name)
         self.send_request(request)
 
-    def _get_file_request(self):
+    def _init_get_file_request(self, file_code):
+        request = dict()
+        request['COMMAND'] = 'FILE-PRIVATE-GET'
+        request['file_code'] = file_code
 
-        
+        self.send_request(request)
+
+    def _download_file(self, response):
+
+        file_name = response['file_name']
+        fd = open(file_name, 'wb+', 0)
+
+        max_size = response['file_size']
+        received = 0
+        self.send_request({
+            'status': 'ready'
+        })
+        while received < max_size:
+            data = self.connection.recv(1024)
+            received += len(data)
+            fd.write(data)
+
+        fd.close()
+
+        print('==file downloaded==')
+

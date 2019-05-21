@@ -4,18 +4,16 @@ from entities import BaseEntity
 class GroupEntity(BaseEntity):
     def __init__(self):
         super().__init__()
-        self.admin = ''  # string
+        self.admins = []  # string
+        self.code = ''  # untuk join group jika open
         self.type = 'open'  # [open,close]
-        self.join_request = []  # used if self.type == close
         self.members = []
         self.inbox = []
-        self.code = ''
 
     def get_data(self):
         return {
-            'admin': self.admin,
+            'admin': self.admins,
             'type': self.type,
-            'join_request': self.join_request,
             'members': self.members,
             'inbox': self.inbox,
             'code': self.code

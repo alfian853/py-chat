@@ -1,6 +1,9 @@
+import json
+import os
 import uuid
 
-from repositories import UserRepository
+from entities import FileEntity
+from repositories import UserRepository, FileRepository
 from session import Session, SessionManager
 
 
@@ -15,6 +18,7 @@ class FileService:
 
     def __init__(self):
         self.user_repository = UserRepository.get_instance()
+        self.file_repository = FileRepository.get_instance()
 
     def handle_request(self, session: Session, request, sub_commands: str):
         commands = sub_commands.split('-')
@@ -22,6 +26,9 @@ class FileService:
         if commands[0] == 'PRIVATE':
             if commands[1] == 'SEND':
                 self._handle_send_file(session, request)
+            elif commands[1] == 'GET':
+                self._handle_get_file(session, request)
+
         elif commands[0] == 'GROUP':
             pass
 
@@ -42,7 +49,7 @@ class FileService:
             'status': 'ready'
         })
 
-        unique_code = str(uuid.uuid4())[1:5]
+        unique_code = str(uuid.uuid4())[1:7]
         file_path = 'storage/'+unique_code + '-' + request['file_name']
         fd = open(file_path, 'wb+', 0)
 
@@ -52,15 +59,19 @@ class FileService:
         conn = session.connection
         while received < max_size:
             data = conn.recv(1024)
-            print('receive data')
             received += len(data)
             fd.write(data)
 
         fd.close()
-        print('complete receive')
+
+        file_entity = FileEntity()
+        file_entity.owner = session.user.username
+        file_entity.file_path = file_path
+        file_entity.file_code = unique_code
+
+        self.file_repository.save(file_entity)
+
         message = {
-            'file_id': unique_code,
-            'file_path': file_path,
             'text': '[' + request['file_name'] + '], file_code: ' + unique_code,
             'from_user': session.user.username
         }
@@ -76,4 +87,35 @@ class FileService:
             target_session.send_response(message)
 
         session.send_response(message)
+
+    def _handle_get_file(self, session: Session, request):
+
+        file_entity = self.file_repository.find_by_file_code(request['file_code'])
+
+        if file_entity is None or not os.path.exists(file_entity.file_path):
+            session.send_response({
+                'FOR': request['command'],
+                'status': 'failed',
+                'message': 'file not found!'
+            })
+        else:
+            file_name = file_entity.file_path.split('/')[1]
+            file_path = file_entity.file_path
+            fd = open(file_path, 'rb')
+            session.send_response({
+                'FOR': request['COMMAND'],
+                'status': 'success',
+                'file_name': file_name,
+                'file_size': os.path.getsize(file_path)
+            })
+
+            resp = json.loads(session.connection.recv(1024).decode('utf-8'))
+
+            if resp['status'] == 'ready':
+                for data in fd:
+                    session.connection.sendall(data)
+
+                fd.close()
+
+
 
