@@ -25,6 +25,9 @@ class ContactActivity(AbstractActivity):
         print('add <username>  # add to contact')
         print('del <username> # delete from contact')
         print('chat <username> # go to personal chat room with user')
+        print('back # back to main menu')
+        print('===========================\n')
+
 
     def handle_input(self, args: str):
         args = args.split(' ')

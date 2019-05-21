@@ -131,6 +131,7 @@ class AuthHandler(AbstractHandler):
                 'status': 'failed',
                 'message': 'please provide \'username\',\'password\',\'password-confirm\''
             })
+            return False
 
         if password1 != password2:
             session.send_response({
@@ -138,6 +139,7 @@ class AuthHandler(AbstractHandler):
                 'status': 'failed',
                 'message': 'password doesn\'t match!'
             })
+            return False
 
         user = self.repository.find_by_username(username)
 

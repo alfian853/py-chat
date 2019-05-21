@@ -18,7 +18,32 @@ Server akan mengirimkan respon berupa status request dan messagenya. status requ
 
 Server harus merespon semua request klien yang tidak valid dengan status "failed". Server juga harus merespon request pada sesi yang tidak valid secara sesi, sintaks, argumen, dan sebagainya.
 
-### Sesi Otorisasi
+## Sisi Activity Client
+1. Menu autorisasi
+- login <username> <password>
+- register <username> <password> <retyped-password>
+- logout
+
+2. Menu Utama
+- contact -> menuju menu kontak
+- group -> menuju menu grup
+- list -> menuju inbox
+- back -> kembali ke menu utama
+
+3. Menu Kontak
+- get -> menampilkan daftar kontak teman
+- add <username> -> menambahkan teman ke kontak
+- del <username> -> menghapus teman dari kontak
+- chat <username> -> membuka personal chat dengan teman
+- back -> kembali ke menu utama
+
+4. Menu Grup
+- create <group-name> -> membuat grup baru
+- get -> mendapatkan daftar grup yang telah tergabung
+- chat <nomor-group dalam daftar> -> masuk ke group chat
+- back -> kembali ke menu utama
+
+### Sesi Autorisasi
 Kata kunci "AUTH-xxx". Pada sesi otorisasi dibagi menjadi 3 yaitu
 1. AUTH-REGISTER : Untuk mendaftarkan klien sebagai pengguna
 2. AUTH-LOGIN : otorisasi klien sebagai pengguna

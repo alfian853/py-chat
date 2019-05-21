@@ -19,10 +19,11 @@ class AuthActivity(AbstractActivity):
         return 'Auth Menu > '
 
     def show_menu(self):
-        print('========Instruction=======')
+        print('========Instruction===========')
         print('login <username> <password>')
         print('register <username> <password> <retyped-password>')
         print('logout')
+        print('==============================\n')
 
     def handle_input(self, args: str):
         args = args.split(' ')
@@ -65,7 +66,7 @@ class AuthActivity(AbstractActivity):
                     next_activity.set_from_activity(self)
                     self.move_activity(next_activity)
             elif response['FOR'] == 'AUTH-LOGOUT':
-                print('message')
+                print(response['message'])
                 if response['status'] == 'success':
                     self.set_token(None)
             else:

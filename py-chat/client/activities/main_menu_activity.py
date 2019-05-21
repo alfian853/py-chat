@@ -25,6 +25,8 @@ class MainMenuActivity(AbstractActivity):
         print('contact  # go to contact menu')
         print('group  # go to group menu')
         print('list  # get inbox')
+        print('back # back to auth')
+        print('==============================\n')
 
     def handle_input(self, args):
         args = args.split(' ')
@@ -42,4 +44,7 @@ class MainMenuActivity(AbstractActivity):
 
         elif args[0] == 'back':
             self.go_to_prev_activity()
+
+        else:
+            self.show_menu()
 

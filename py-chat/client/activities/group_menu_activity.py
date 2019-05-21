@@ -32,6 +32,8 @@ class GroupMenuActivity(AbstractActivity):
         print('create <group_name>  # create a group')
         print('get  # get numbered list of joined group')
         print('chat <group order number in list> enter group chat room')
+        print('back # back to main menu')
+        print('==============================\n')
 
     def handle_input(self, args: str):
         args = args.split(' ')
@@ -64,6 +66,9 @@ class GroupMenuActivity(AbstractActivity):
             })
         elif args[0] == 'back':
             self.go_to_prev_activity()
+
+        else:
+            self.show_menu()
 
     def response_handler(self, response, is_json):
 
