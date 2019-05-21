@@ -38,3 +38,13 @@ class UserRepository(AbstractRepository):
             return res['inbox'][from_username]
         else:
             return []
+
+    def pushGroup(self, username, group):
+        self.db.update_one(
+            {
+                'username': username
+            }, 
+            {
+                "$push": {'group_list': group}
+            }
+        )

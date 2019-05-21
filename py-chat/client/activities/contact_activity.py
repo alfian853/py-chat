@@ -71,6 +71,8 @@ class ContactActivity(AbstractActivity):
                 for contact in contacts:
                     print(str(i)+'.', contact)
                     i += 1
+            elif response['FOR'] == 'CONTACT-ADD':
+                print(response['message'])
             else:
                 super().response_handler(response, is_json)
         else:

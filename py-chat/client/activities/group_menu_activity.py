@@ -40,7 +40,7 @@ class GroupMenuActivity(AbstractActivity):
         args = args.split(' ')
 
         if args[0] == 'create':
-            print('args: ' + str(args[0:]))
+            # print('args: ' + str(args[0:]))
             if args[2] is None:
                 self.send_request({
                     'COMMAND': 'GROUP-CREATE',
@@ -86,10 +86,14 @@ class GroupMenuActivity(AbstractActivity):
 
         if is_json:
             if response['FOR'] == 'GROUP-GET':
-                self.groups = response['group_list']
-                i = 0
-                for group in self.groups:
-                    print(str(i)+'.', group['group_name'])
+                groups = response['group_list']
+                self.groups = groups
+                print (groups)
+                # i = 1
+                for i in range(len(groups)):
+                    # print(str(i)+'.', group['group_name'])
+                    print("{}. {}".format(i+1, groups[i]))
+                    # i += 1
             elif response['FOR'] == 'GROUP-INVITE':
                 print(response['message'])
             elif response['FOR'] == 'GROUP-CREATE':

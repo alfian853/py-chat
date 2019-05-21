@@ -9,6 +9,7 @@ class GroupEntity(BaseEntity):
         self.group_name = ''
         self.members = []
         self.inbox = []
+        self.enabled = True # true = available, false = deleted (safe delete)
 
     def get_data(self):
         return {

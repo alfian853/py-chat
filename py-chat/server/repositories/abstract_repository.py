@@ -41,3 +41,6 @@ class AbstractRepository:
                     "$set": entity_obj.get_data()
                 }
             )
+
+        return entity_obj.id
+            

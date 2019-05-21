@@ -29,6 +29,23 @@ class GroupRepository(AbstractRepository):
             entity.code = obj['code']
             return entity
 
+    def fin_by_name(self, name):
+        """
+
+        :rtype: UserEntity
+        """
+        res = self.db.find_one({'group_name': name})
+        if res is not None:
+            entity = GroupEntity()
+            entity.id = obj['_id']
+            entity.group_name = obj['group_name']
+            entity.inbox = obj['inbox']
+            entity.members = obj['members']
+            entity.admins = obj['admins']
+            entity.code = obj['code']
+            return entity
+        return None
+
 
 
 
