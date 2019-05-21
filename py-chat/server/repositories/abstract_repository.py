@@ -19,7 +19,7 @@ class AbstractRepository:
                 +Env.mongodb_host+':'
                 +str(Env.mongodb_port)
             )
-        self.db = AbstractRepository.mongo_connection.progjar[entity_name]
+        self.db = AbstractRepository.mongo_connection[Env.mongodb_database][entity_name]
 
     def find_by_id(self, id: str) -> dict:
         return self.db.find_one({
