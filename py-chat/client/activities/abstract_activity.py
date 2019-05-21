@@ -63,7 +63,10 @@ class AbstractActivity(object):
     def response_handler(self, response, is_json):
         if is_json:
             if response['FOR'] == 'NOTIF':
-                print('[New Message from '+response['from_user']+']:', response['text'])
+                if 'from_group' in response.keys():
+                    print('[New Message from '+response['from_user']+' ('+response['from_group']+')]:', response['text'])
+                else:
+                    print('[New Message from '+response['from_user']+']:', response['text'])
             else:
                 print('unhandled response')
         else:

@@ -1,7 +1,7 @@
 import socket
 
 from activities.activity_container import ActivityContainer
-from activities import ContactActivity, AbstractActivity
+from activities import ContactActivity, AbstractActivity,GroupMenuActivity
 
 
 class MainMenuActivity(AbstractActivity):
@@ -31,9 +31,15 @@ class MainMenuActivity(AbstractActivity):
 
         if args[0] == 'contact':
             next_activity = ContactActivity.get_instance(self.connection, self.activity_container)
-            print('move ', next_activity.__class__)
             self.move_activity(next_activity)
             next_activity.set_from_activity(self)
+
+        elif args[0] == 'group':
+            next_activity = GroupMenuActivity.get_instance(self.connection, self.activity_container)
+            next_activity.init_group_menu_data()
+            next_activity.set_from_activity(self)
+            self.move_activity(next_activity)
+
         elif args[0] == 'back':
             self.go_to_prev_activity()
 

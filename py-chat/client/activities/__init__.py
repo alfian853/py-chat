@@ -1,5 +1,7 @@
 from activities.abstract_activity import AbstractActivity
 from activities.contact_activity import ContactActivity
+from activities.group_chat_activity import GroupChatActivity
+from activities.group_menu_activity import GroupMenuActivity
 from activities.main_menu_activity import MainMenuActivity
 from activities.auth_activity import AuthActivity
 # from activities.activity_container import ActivityContainer

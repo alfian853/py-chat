@@ -34,6 +34,8 @@ class ActivityContainer(threading.Thread):
                 self.activity.response_handler(json_resp, True)
 
             except Exception as e:
-                traceback.print_exc()
+                # traceback.print_exc()
+                if recv == None:
+                    print('errorrr')
                 self.activity.response_handler(recv, False)
 

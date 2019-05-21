@@ -3,11 +3,9 @@ import socket
 
 from activities import AbstractActivity
 from activities.activity_container import ActivityContainer
-from utils import Notifiable, Receiver
 
 
-class PrivateChatActivity(AbstractActivity, Notifiable):
-
+class PrivateChatActivity(AbstractActivity):
     instance = None
 
     def __init__(self, connection):
@@ -23,11 +21,8 @@ class PrivateChatActivity(AbstractActivity, Notifiable):
             PrivateChatActivity.instance.set_container(container)
         return PrivateChatActivity.instance
 
-    def handle_notification(self, notification):
-        print(self.partner_user+':', notification['message'])
-
     def get_activity_input_line(self):
-        return self.username + ' - '+self.partner_user+'/Private Chat > '
+        return self.username + ' - ' + self.partner_user + '/Private Chat > '
 
     def show_menu(self):
         print('========Instruction=======')
@@ -62,17 +57,17 @@ class PrivateChatActivity(AbstractActivity, Notifiable):
             self.go_to_prev_activity()
 
     def response_handler(self, response, is_json):
+        print(response)
         if is_json:
             if response['FOR'] == 'MSG-PRIVATE-GET':
                 for message in response['messages']:
-                    print(message['from_user']+':', message['text'])
+                    print(message['from_user'] + ':', message['text'])
             elif response['FOR'] == 'MSG-PRIVATE-SEND':
                 if response['status'] == 'success':
                     print(self.username + ':', self.last_message)
             elif response['FOR'] == 'NOTIF' \
                     and (response['from_user'] == self.partner_user
-                        or response['from_user'] == self.username) :
-
+                         or response['from_user'] == self.username):
                 print(response['from_user'] + ':', response['text'])
             elif response['FOR'] == 'FILE-PRIVATE-SEND':
                 if response['status'] == 'ready':
@@ -133,4 +128,3 @@ class PrivateChatActivity(AbstractActivity, Notifiable):
         fd.close()
 
         print('==file downloaded==')
-

@@ -1,9 +1,9 @@
-from repositories import UserRepository
+from entities import GroupEntity
+from repositories import UserRepository, GroupRepository
 from session import SessionManager, Session
 
 
 class ChatService:
-
     instance = None
 
     @staticmethod
@@ -14,6 +14,7 @@ class ChatService:
 
     def __init__(self):
         self.user_repository = UserRepository.get_instance()
+        self.group_repository = GroupRepository.get_instance()
 
     def handle_request(self, session: Session, request, sub_commands: str):
         print(sub_commands)
@@ -25,7 +26,10 @@ class ChatService:
             elif commands[1] == 'GET':
                 self._msg_private_get_handler(session, request)
         elif commands[0] == 'GROUP':
-            pass
+            if commands[1] == 'SEND':
+                self._msg_group_send_handler(session, request)
+            elif commands[1] == 'GET':
+                self._msg_group_get_handler(session, request)
 
     def _msg_private_get_handler(self, session: Session, request):
         session.send_response({
@@ -47,22 +51,18 @@ class ChatService:
                 'from_user': session.user.username,
                 'text': request['message']
             })
+
+        if target_user is not None:
             session.send_response({
                 'FOR': request['COMMAND'],
                 'status': 'success'
             })
         else:
-            if target_user is not None:
-                session.send_response({
-                    'FOR': request['COMMAND'],
-                    'status': 'success'
-                })
-            else:
-                session.send_response({
-                    'FOR': request['COMMAND'],
-                    'status': 'failed',
-                    'message': 'user not found'
-                })
+            session.send_response({
+                'FOR': request['COMMAND'],
+                'status': 'failed',
+                'message': 'user not found'
+            })
 
         if target_user is not None:
             message = dict()
@@ -75,5 +75,60 @@ class ChatService:
 
             target_user.add_to_inbox(session.user.username, message)
             self.user_repository.save(target_user)
+
+    def _msg_group_send_handler(self, session: Session, request):
+
+        group_entity: GroupEntity = self.group_repository.find_by_id(request['group_id'])
+
+        if session.user.username in group_entity.members:
+            pass
+        else:
+            session.send_response({
+                'FOR': 'MSG-GROUP-SEND',
+                'status': 'failed',
+                'message': 'You are not a member of the group!'
+            })
+            return
+
+        members = group_entity.members
+        for member in members:
+            if member == session.user.username:
+                continue
+            member_session: Session = SessionManager.get_by_username(member)
+            if member_session is not None:
+                member_session.send_response({
+                    'FOR': 'NOTIF',
+                    'from_group': group_entity.group_name,
+                    'from_user': session.user.username,
+                    'text': request['message']
+                })
+                print('send to '+member_session.user.username)
+
+        group_entity.inbox.append({
+            'from_user': session.user.username,
+            'text': request['message']
+        })
+
+        session.send_response({
+            'FOR': 'MSG-GROUP-SEND',
+            'status': 'success'
+        })
+
+        self.group_repository.save(group_entity)
+
+    def _msg_group_get_handler(self, session: Session, request):
+        group_entity: GroupEntity = self.group_repository.find_by_id(request['group_id'])
+
+        if session.user.username in group_entity.members:
+            session.send_response({
+                'FOR': 'MSG-GROUP-GET',
+                'messages': group_entity.inbox
+            })
+        else:
+            session.send_response({
+                'FOR': 'MSG-GROUP-GET',
+                'status': 'failed',
+                'message': 'You are not a member of the group!'
+            })
 
 

@@ -21,7 +21,7 @@ class AbstractRepository:
             )
         self.db = AbstractRepository.mongo_connection.progjar[entity_name]
 
-    def find_by_id(self, id):
+    def find_by_id(self, id: str) -> dict:
         return self.db.find_one({
             '_id': ObjectId(id)
         })
