@@ -3,9 +3,17 @@ from session import SessionManager, Session
 
 
 class ChatService:
+
+    instance = None
+
+    @staticmethod
+    def get_instance():
+        if ChatService.instance is None:
+            ChatService.instance = ChatService()
+        return ChatService.instance
+
     def __init__(self):
         self.user_repository = UserRepository.get_instance()
-        pass
 
     def handle_request(self, session: Session, request, sub_commands: str):
         print(sub_commands)

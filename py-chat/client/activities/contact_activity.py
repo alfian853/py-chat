@@ -68,4 +68,7 @@ class ContactActivity(AbstractActivity):
                 for contact in contacts:
                     print(str(i)+'.', contact)
                     i += 1
-        super().response_handler(response, is_json)
+            else:
+                super().response_handler(response, is_json)
+        else:
+            super().response_handler(response, is_json)

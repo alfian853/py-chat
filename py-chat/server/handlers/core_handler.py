@@ -23,7 +23,8 @@ class CoreHandler(AbstractHandler):
         self.services = {
             'CONTACT': ContactService(),
             'GROUP': GroupService(),
-            'MSG': ChatService()
+            'MSG': ChatService(),
+            'FILE': FileService()
         }
 
     def handle(self, session: Session, request):

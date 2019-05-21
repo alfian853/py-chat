@@ -1,3 +1,4 @@
+import os
 import socket
 
 from activities import AbstractActivity
@@ -13,6 +14,7 @@ class PrivateChatActivity(AbstractActivity, Notifiable):
         super().__init__(connection)
         self.partner_user = None
         self.last_message = None
+        self.last_file_name = None
 
     @staticmethod
     def get_instance(connection: socket.socket, container: ActivityContainer = None):
@@ -48,9 +50,13 @@ class PrivateChatActivity(AbstractActivity, Notifiable):
             request['message'] = args[1]
             self.send_request(request)
             self.last_message = args[1]
-        elif args[0] == 'get_file':
-            pass
+
         elif args[0] == 'send_file':
+            self.last_file_name = args[1]
+            self._init_file_send_request()
+
+        elif args[0] == 'get_file':
+            self.
             pass
         elif args[0] == 'back':
             self.go_to_prev_activity()
@@ -63,8 +69,15 @@ class PrivateChatActivity(AbstractActivity, Notifiable):
             elif response['FOR'] == 'MSG-PRIVATE-SEND':
                 if response['status'] == 'success':
                     print(self.username + ':', self.last_message)
-            elif response['FOR'] == 'NOTIF' and response['from_user'] == self.partner_user:
+            elif response['FOR'] == 'NOTIF' \
+                    and (response['from_user'] == self.partner_user
+                        or response['from_user'] == self.username) :
+
                 print(response['from_user'] + ':', response['text'])
+            elif response['FOR'] == 'FILE-PRIVATE-SEND':
+                if response['status'] == 'ready':
+                    self._send_file()
+
             else:
                 print(response)
 
@@ -72,3 +85,25 @@ class PrivateChatActivity(AbstractActivity, Notifiable):
         request['p_username'] = self.partner_user
         super().send_request(request)
 
+    def _send_file(self):
+        fd = open(self.last_file_name, 'rb')
+        for data in fd:
+            self.connection.sendall(data)
+        print('===file sent!===')
+
+    def _init_file_send_request(self):
+
+        if not os.path.exists(self.last_file_name):
+            print('file is not exist!')
+            return
+
+        request = dict()
+        request['COMMAND'] = 'FILE-PRIVATE-SEND'
+        request['p_username'] = self.partner_user
+        request['file_name'] = self.last_file_name
+        request['file_size'] = os.path.getsize(self.last_file_name)
+        self.send_request(request)
+
+    def _get_file_request(self):
+
+        

@@ -3,6 +3,13 @@ from session import Session
 
 
 class ContactService:
+    instance = None
+
+    @staticmethod
+    def get_instance():
+        if ContactService.instance is None:
+            ContactService.instance = ContactService()
+        return ContactService.instance
 
     def __init__(self):
         self.user_repository = UserRepository.get_instance()

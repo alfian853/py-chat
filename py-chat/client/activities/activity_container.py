@@ -22,8 +22,14 @@ class ActivityContainer(threading.Thread):
 
     def run(self):
         while True:
-            recv = self.activity.get_connection().recv(1024).decode('utf-8')
+            recv = None
             try:
+                recv = self.activity.get_connection().recv(1024).decode('utf-8')
+                if recv[0] == '{':
+                    while True:
+                        if recv[-1] == '}':
+                            break
+                        recv += self.activity.get_connection().recv(1024).decode('utf-8')
                 json_resp = json.loads(recv)
                 self.activity.response_handler(json_resp, True)
 

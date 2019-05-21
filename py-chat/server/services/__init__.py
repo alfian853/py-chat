@@ -1,3 +1,4 @@
 from services.group_service import GroupService
 from services.chat_service import ChatService
+from services.file_service import FileService
 from services.contact_service import ContactService
