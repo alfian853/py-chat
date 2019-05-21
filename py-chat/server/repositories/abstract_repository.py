@@ -34,6 +34,10 @@ class AbstractRepository:
 
         else:
             self.db.update_one(
-                {'_id': entity_obj.id},
-                entity_obj.get_data()
+                {
+                    '_id': ObjectId(entity_obj.id)
+                },
+                {
+                    "$set": entity_obj.get_data()
+                }
             )

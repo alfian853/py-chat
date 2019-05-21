@@ -1,0 +1,74 @@
+import socket
+
+from activities import AbstractActivity
+from activities.activity_container import ActivityContainer
+from utils import Notifiable, Receiver
+
+
+class PrivateChatActivity(AbstractActivity, Notifiable):
+
+    instance = None
+
+    def __init__(self, connection):
+        super().__init__(connection)
+        self.partner_user = None
+        self.last_message = None
+
+    @staticmethod
+    def get_instance(connection: socket.socket, container: ActivityContainer = None):
+        if PrivateChatActivity.instance is None:
+            PrivateChatActivity.instance = PrivateChatActivity(connection)
+            PrivateChatActivity.instance.set_container(container)
+        return PrivateChatActivity.instance
+
+    def handle_notification(self, notification):
+        print(self.partner_user+':', notification['message'])
+
+    def get_activity_input_line(self):
+        return self.username + ' - '+self.partner_user+'/Private Chat > '
+
+    def show_menu(self):
+        print('========Instruction=======')
+        print('contact  # go to contact menu')
+        print('group  # go to group menu')
+        print('list  # get inbox')
+
+    def init_chat_room(self, partner_username):
+        self.partner_user = partner_username
+        request = dict()
+        request['COMMAND'] = 'MSG-PRIVATE-GET'
+        request['p_username'] = partner_username
+        self.send_request(request)
+
+    def handle_input(self, args):
+        args = args.split(' ', 2)
+        request = dict()
+        if args[0] == 'send':
+            request['COMMAND'] = 'MSG-PRIVATE-SEND'
+            request['message'] = args[1]
+            self.send_request(request)
+            self.last_message = args[1]
+        elif args[0] == 'get_file':
+            pass
+        elif args[0] == 'send_file':
+            pass
+        elif args[0] == 'back':
+            self.go_to_prev_activity()
+
+    def response_handler(self, response, is_json):
+        if is_json:
+            if response['FOR'] == 'MSG-PRIVATE-GET':
+                for message in response['messages']:
+                    print(message['from_user']+':', message['text'])
+            elif response['FOR'] == 'MSG-PRIVATE-SEND':
+                if response['status'] == 'success':
+                    print(self.username + ':', self.last_message)
+            elif response['FOR'] == 'NOTIF' and response['from_user'] == self.partner_user:
+                print(response['from_user'] + ':', response['text'])
+            else:
+                print(response)
+
+    def send_request(self, request):
+        request['p_username'] = self.partner_user
+        super().send_request(request)
+

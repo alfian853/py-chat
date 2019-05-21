@@ -1,16 +1,12 @@
 import socket
 
-from activities import MenuActivity
-from activities.abstract_activity import AbstractActivity
+from activities import MainMenuActivity, AbstractActivity
 from activities.activity_container import ActivityContainer
 
 
 class AuthActivity(AbstractActivity):
 
     instance = None
-
-    def __init__(self, connection):
-        super().__init__(connection)
 
     @staticmethod
     def get_instance(connection: socket.socket, container: ActivityContainer = None):
@@ -23,13 +19,13 @@ class AuthActivity(AbstractActivity):
         return 'Auth Menu > '
 
     def show_menu(self):
-        print('auth page')
+        print('========Instruction=======')
         print('login <username> <password>')
         print('register <username> <password> <retyped-password>')
         print('logout')
 
-    def handle_input(self, args):
-        args = args.split(' ', 2)
+    def handle_input(self, args: str):
+        args = args.split(' ')
 
         request = dict()
         if args[0] == 'login':
@@ -38,13 +34,7 @@ class AuthActivity(AbstractActivity):
             request['password'] = args[2]
 
             self.send_request(request)
-            response = self.get_response()
-
-            if response['status'] == 'success':
-                self.token = response['token']
-                self.move_activity(MenuActivity.get_instance(self.connection, self.activity_container))
-
-            print(response['message'])
+            self.set_username(args[1])
 
         elif args[0] == 'register':
             request['COMMAND'] = 'AUTH-REGISTER'
@@ -53,24 +43,30 @@ class AuthActivity(AbstractActivity):
             request['password-confirm'] = args[3]
 
             self.send_request(request)
-            response = self.get_response()
-
-            print(response['message'])
 
         elif args[0] == 'logout':
             request['COMMAND'] = 'AUTH-LOGOUT'
 
             self.send_request(request)
-            response = self.get_response()
-
-            if response['status'] == 'success':
-                self.token = None
-
-            print(response['message'])
 
         else:
             if args[0] != 'help':
                 print('<UNKNOWN COMMAND>')
             self.show_menu()
             return
+
+    def response_handler(self, response, is_json):
+        if is_json:
+            if response['FOR'] == 'AUTH-LOGIN':
+                print(response['message'])
+                if response['status'] == 'success':
+                    self.set_token(response['token'])
+                    next_activity = MainMenuActivity.get_instance(self.connection, self.activity_container)
+                    next_activity.set_from_activity(self)
+                    self.move_activity(next_activity)
+            elif response['FOR'] == 'AUTH-LOGOUT':
+                if response['status'] == 'success':
+                    self.set_token(None)
+            else:
+                print(response['message'])
 

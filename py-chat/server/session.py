@@ -1,50 +1,62 @@
 import json
-import threading
 import socket
 
 # session storage
 import entities
+from entities import UserEntity
 
+
+class SessionManager:
+    session_list = []
+
+    @staticmethod
+    def get_by_username(username):
+        print(SessionManager.session_list)
+        for session in SessionManager.session_list:
+            print(session.user.username)
+            if session.user.username == username:
+                return session
+        return None
+
+    @staticmethod
+    def add_to_list(session):
+        SessionManager.session_list.append(session)
+
+    @staticmethod
+    def del_from_list(session):
+        SessionManager.session_list.remove(session)
 
 class Session:
+    connection: socket.socket
+    user: UserEntity
+
     # threading.local() agar datanya dipisah untuk setiap thread
-    storage = threading.local()
+    # storage = threading.local()
 
-    @staticmethod
-    def connection() -> socket.socket:
-        return Session.storage.connection
+    def __init__(self):
+        self.connection = None
+        self.user = None
+        self.token = None
 
-    @staticmethod
-    def set_connection(connection: socket.socket):
-        Session.storage.connection = connection
+    def set_connection(self, connection: socket.socket):
+        self.connection = connection
 
-    @staticmethod
-    def user() -> entities.UserEntity:
-        return Session.storage.user
+    # pakai ini untuk add ke session manager
+    def set_login_user(self, user: entities.UserEntity):
+        self.user = user
+        SessionManager.add_to_list(self)
 
-    @staticmethod
-    def set_user(user: entities.UserEntity):
-        Session.storage.user = user
-
-    @staticmethod
-    def token():
-        return Session.storage.token
-
-    @staticmethod
-    def set_token(token):
-        Session.storage.token = token
-
-    @staticmethod
-    def send_response(response):
+    def send_response(self, response):
         print('send > ')
         print(response)
         if isinstance(response, dict):
-            Session.connection().sendall(json.dumps(response).encode('utf-8'))
+            self.connection.sendall(json.dumps(response).encode('utf-8'))
         else:
-            Session.connection().sendall(response.encode('utf-8'))
+            self.connection.sendall(response.encode('utf-8'))
 
     # hapus data login
-    @staticmethod
-    def clear():
-        Session.storage.user = None
-        Session.storage.token = None
+    def clear(self):
+        self.user = None
+        self.token = None
+
+

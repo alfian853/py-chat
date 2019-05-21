@@ -21,34 +21,35 @@ class AuthHandler(AbstractHandler):
         self.tokens_data = {}
         self.repository = UserRepository.get_instance()
 
-    def handle(self, request):
+    def handle(self, session, request):
         command: str = request['COMMAND']
         # print(request)
         if command is None:
-            Session.send_response({
+            session.send_response({
+                'FOR': request['COMMAND'],
                 'status': 'failed',
                 'message': 'unknown request format!'
             })
-        print('is auth : ',self._is_authenticated(request))
+        print('is auth : ',self._is_authenticated(session, request))
         sub_command = command.split('-')
         if sub_command[0] == 'AUTH':
             task = sub_command[1]
             print(task)
             if task == 'LOGIN':
-                self._do_login(request)
+                self._do_login(session, request)
             if task == 'LOGOUT':
-                self._do_logout(request)
+                self._do_logout(session, request)
             if task == 'REGISTER':
-                self._do_register(request)
-        elif self._is_authenticated(request):
-            super(AuthHandler, self).handle(request)
+                self._do_register(session, request)
+        elif self._is_authenticated(session, request):
+            super(AuthHandler, self).handle(session, request)
         else:
-            Session.send_response({
+            session.send_response({
                 'status': 'failed',
                 'message': 'unauthorized!'
             })
 
-    def _is_authenticated(self, request):
+    def _is_authenticated(self, session: Session, request):
         """
         :param request: dict
         :return:
@@ -61,9 +62,9 @@ class AuthHandler(AbstractHandler):
         if token is None or token is '':
             return False
 
-        return Session.token() == token
+        return session.token == token
 
-    def _do_login(self, request):
+    def _do_login(self, session: Session, request):
         """
         :param _socket.socket connection:
         :param request:
@@ -73,7 +74,8 @@ class AuthHandler(AbstractHandler):
         username = request['username']
         password = request['password']
         if username is None or password is None:
-            Session.send_response({
+            session.send_response({
+                'FOR': 'AUTH-LOGIN',
                 'status': 'failed',
                 'message': 'username or password can\'t be empty'
             })
@@ -81,51 +83,58 @@ class AuthHandler(AbstractHandler):
         user = self.repository.find_by_username(username)
 
         if user is None:
-            Session.send_response({
+            session.send_response({
+                'FOR': request['COMMAND'],
                 'status': 'failed',
                 'message': 'unknown user'
             })
 
         if user.password == password:
-            Session.set_user(user)
-            Session.set_token(str(uuid.uuid4()))
-            Session.send_response({
+            session.set_login_user(user)
+            session.token = str(uuid.uuid4())
+            session.send_response({
+                'FOR': request['COMMAND'],
                 'status': 'success',
                 'message': 'you are logged in now',
-                'token': Session.token()
+                'token': session.token
             })
         else:
-            Session.send_response({
+            session.send_response({
+                'FOR': request['COMMAND'],
                 'status': 'failed',
                 'message': 'wrong password'
             })
 
-    def _do_logout(self, request):
-        if self._is_authenticated(request):
-            Session.clear()
-            Session.send_response({
+    def _do_logout(self, session: Session, request):
+        if self._is_authenticated(session, request):
+            session.clear()
+            session.send_response({
+                'FOR': request['COMMAND'],
                 'status': 'success',
                 'message': 'you are logged out now'
             })
         else:
-            Session.send_response({
+            session.send_response({
+                'FOR': request['COMMAND'],
                 'status': 'failed',
                 'message': 'unauthorized request!'
             })
 
-    def _do_register(self, request):
+    def _do_register(self, session: Session, request):
         username = request['username']
         password1 = request['password']
         password2 = request['password-confirm']
 
         if username is None or password1 is None or password2 is None:
-            Session.send_response({
+            session.send_response({
+                'FOR': request['COMMAND'],
                 'status': 'failed',
                 'message': 'please provide \'username\',\'password\',\'password-confirm\''
             })
 
         if password1 != password2:
-            Session.send_response({
+            session.send_response({
+                'FOR': request['COMMAND'],
                 'status': 'failed',
                 'message': 'password doesn\'t match!'
             })
@@ -137,12 +146,14 @@ class AuthHandler(AbstractHandler):
             user.username = username
             user.password = password1
             self.repository.save(user)
-            Session.send_response({
+            session.send_response({
+                'FOR': request['COMMAND'],
                 'status': 'success',
                 'message': 'you are registered now!'
             })
         else:
-            Session.send_response({
+            session.send_response({
+                'FOR': request['COMMAND'],
                 'status': 'failed',
                 'message': 'that username already been used'
             })

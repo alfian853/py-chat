@@ -1,4 +1,5 @@
-from activities.menu_activity import MenuActivity
+from activities.abstract_activity import AbstractActivity
+from activities.contact_activity import ContactActivity
+from activities.main_menu_activity import MainMenuActivity
 from activities.auth_activity import AuthActivity
 # from activities.activity_container import ActivityContainer
-# from activities.abstract_activity import AbstractActivity

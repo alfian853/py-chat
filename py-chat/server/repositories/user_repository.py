@@ -22,10 +22,19 @@ class UserRepository(AbstractRepository):
         res = self.db.find_one({'username': username})
         if res is not None:
             user = UserEntity()
+            user.id = res['_id']
             user.username = res['username']
             user.password = res['password']
+            user.contact_list = res['contact_list']
             user.inbox = res['inbox']
-            user.joined_groups = res['joined_groups']
-            user.id = res['_id']
+            user.group_list = res['group_list']
             return user
         return None
+
+    def get_message_from(self, username, from_username):
+        res = self.db.find_one({'username': username})
+
+        if from_username in res['inbox'].keys():
+            return res['inbox'][from_username]
+        else:
+            return []
