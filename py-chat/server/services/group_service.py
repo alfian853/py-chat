@@ -1,8 +1,8 @@
+import uuid
+
 from entities import GroupEntity, UserEntity
 from repositories import GroupRepository, UserRepository
 from session import Session
-import bson
-import uuid
 
 
 class GroupService:
@@ -55,30 +55,30 @@ class GroupService:
                     self.user_repository.save(user_exist)
                     new_member.append(name)
                     session.send_response({
-                    'FOR': 'GROUP-INVITE',
-                    'status': 'success',
-                    'message': name + ' has joined this group'
+                        'FOR': 'GROUP-INVITE',
+                        'status': 'success',
+                        'message': name + ' has joined this group'
                     })
                 else:
                     session.send_response({
-                    'FOR': 'GROUP-INVITE',
-                    'status': 'failed',
-                    'message': name + ' failed to join this group'
+                        'FOR': 'GROUP-INVITE',
+                        'status': 'failed',
+                        'message': name + ' failed to join this group'
                     })
 
             if len(new_member) > 0:
                 group_members.extend(new_member)
                 self.group_repository.save(group)
                 session.send_response({
-                        'FOR': 'GROUP-INVITE',
-                        'status': 'success',
-                        'message': 'new members have been added'
+                    'FOR': 'GROUP-INVITE',
+                    'status': 'success',
+                    'message': 'new members have been added'
                 })
             else:
                 session.send_response({
-                        'FOR': 'GROUP-INVITE',
-                        'status': 'failed',
-                        'message': 'no member added'
+                    'FOR': 'GROUP-INVITE',
+                    'status': 'failed',
+                    'message': 'no member added'
                 })
 
     def _get_group_list(self, session: Session, request):
