@@ -48,7 +48,7 @@ class HttpServer:
 				object_address = j[1].strip()
 				return self.http_options(object_address)
 			else:
-				return self.response(400,'Bad Request','',{})
+				return self.response(404,'Method Not Allowed','',{})
 		except IndexError:
 			return self.response(400,'Bad Request','',{})
 
