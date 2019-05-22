@@ -31,9 +31,11 @@ class GroupMenuActivity(AbstractActivity):
     def show_menu(self):
         print('========Instruction=======')
         print('create <group_name>  # create a group')
-        print('join <code> # join to group with code')
+        print('join <group_code> # join to group with code')
+        print('invite <group_code> <friend_username 1..N> # invite friend to join group')
         print('get  # get numbered list of joined group')
         print('chat <group order number in list> enter group chat room')
+        print('exit <group_code> # leave group')
         print('back # back to main menu')
         print('==============================\n')
 
@@ -41,19 +43,6 @@ class GroupMenuActivity(AbstractActivity):
         args = args.split(' ')
 
         if args[0] == 'create':
-            # print('args: ' + str(args[0:]))
-            # if args[2] is None:
-            #     self.send_request({
-            #         'COMMAND': 'GROUP-CREATE',
-            #         'group_name': args[1]
-            #         })
-            # else: # check if group code available
-            #     # print ('code client:' + str(args[2]))
-            #     self.send_request({
-            #         'COMMAND': 'GROUP-CREATE',
-            #         'group_name': args[1],
-            #         'code': args[2]
-            #         })
             self.send_request({
                     'COMMAND': 'GROUP-CREATE',
                     'group_name': args[1]
@@ -83,10 +72,16 @@ class GroupMenuActivity(AbstractActivity):
             next_activity.set_from_activity(self)
             self.move_activity(next_activity)
 
-        elif args[0] == 'add':
+        elif args[0] == 'invite':
             self.send_request({
                 'COMMAND': 'GROUP-INVITE',
-                'user_list': args[1:]
+                'code': args[1],
+                'user_list': args[2:]
+            })
+        elif args[0] == 'exit':
+            self.send_request({
+                'COMMAND': 'GROUP-EXIT',
+                'code': args[1]
             })
         elif args[0] == 'back':
             self.go_to_prev_activity()
@@ -106,5 +101,8 @@ class GroupMenuActivity(AbstractActivity):
                     # print(str(i)+'.', group['group_name'])
                     print("{}. {}".format(i, groups[i]))
                     # i += 1
-            elif response['FOR'] == 'GROUP-INVITE' or response['FOR'] == 'GROUP-CREATE' or response['FOR'] == 'GROUP-JOIN':
+            # elif response['FOR'] == 'GROUP-INVITE' or response['FOR'] == 'GROUP-CREATE' or response['FOR'] == 'GROUP-JOIN':
+            #     print(response['message'])
+            else:
                 print(response['message'])
+

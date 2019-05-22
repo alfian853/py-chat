@@ -38,8 +38,9 @@ Server harus merespon semua request klien yang tidak valid dengan status "failed
 - back -> kembali ke menu utama
 
 4. Menu Grup
-- create [group-name]-> membuat grup baru
+- create [nama grup]-> membuat grup baru
 - get -> mendapatkan daftar grup yang telah tergabung
+- join [kode grup] -> bergabung ke dalam grup
 - chat [nomor-group dalam daftar] -> masuk ke group chat
 - back -> kembali ke menu utama
 
@@ -58,12 +59,11 @@ Argumen-argumen yang dibutuhkan untuk masing-masing kata kunci antara lain,
 Pengguna dapat bertukar pesan (chat) terhadap sesama klien yang sama-sama sudah terotorisasi di waktu yang sama. Selain itu pengguna juga dapat bergabung kedalam group untuk bertukar pesan ke banyak pengguna lain yang tergabung pada group yang sama. Selain itu, pengguna juga dapat mengirimkan file berupa gambar pada saat bertukar pesan.
 
 Kata kunci yang digunakan antara lain,
-1. GROUP-CREATE : Digunakan untuk membuat grup obrolan baru
+1. GROUP-CREATE *[nama_grup]* : Digunakan untuk membuat grup obrolan baru
 2. GROUP-DELETE : Digunakan untuk menghapus grup obrolan. Pengguna yang menggunakan fitur ini harus terotorisasi sebagai admin dalam grup yang ingin dihapus
-3. GROUP-JOIN : Digunakan untuk bergabung pada grup obrolan
-4. GROUP-LIST : Digunakan untuk melihat daftar grup yang ada. Grup yang masuk dalam list adalah Open grup. Respon server berupa nama grup dan kode yang dapat digunakan untuk bergabung kedalam grup.
-5. GROUP-EXIT : Digunakan untuk keluar dari grup obrolan.
-6. GROUP-INVITE : Digunakan untuk mengundang pengguna lain untuk masuk kedalam grup. Pengguna yang menggunakan fitur ini harus terotorisasi sebagai admin grup untuk mengundang pengguna lain
+3. GROUP-JOIN *[kode_grup]* : Digunakan untuk bergabung pada grup obrolan
+5. GROUP-EXIT *[kode_grup]* : Digunakan untuk keluar dari grup obrolan.
+6. GROUP-INVITE *[kode_grup]* *[nama_teman 1..N]* : Digunakan untuk mengundang pengguna lain untuk masuk kedalam grup. Pengguna yang menggunakan fitur ini harus terotorisasi sebagai admin grup untuk mengundang pengguna lain
 7. CHAT-SEND-PRIVATE : Digunakan untuk melakukan chat pada pengguna lain
 8. CHAT-SEND-GROUP : Digunakan untuk melakukan chat pada grup obrolan. Obrolan hanya bisa dikirim di grup dimana pengguna merupakan member dari grup.
 9. CHAT-GET-PRIVATE : Digunakan untuk menampilkan isi inbox dari obrolan yang belum difetch
@@ -78,11 +78,6 @@ Kata kunci yang digunakan antara lain,
 16. PERSONAL : Digunakan untuk menampilkan id dari pengguna
 
 Argumen-argumen yang dibutuhkan untuk masing-masing kata kunci antara lain,
-1. GROUP-CREATE [nama_grup] [tipe_grup(optional,default=open, option=open/close)] 
-2. GROUP-DELETE [group_id]
-3. GROUP-JOIN [kode_grup]
-4. GROUP-EXIT [group_id] 
-5. GROUP-INVITE [id_penggunateman] [group_id]
 6. CHAT-PRIVATE-SEND [id_penggunateman] [pesan]
 7. CHAT-PRIVATE-GET [id_penggunateman]
 8. CHAT-GROUP-GET [group_id]
