@@ -60,31 +60,20 @@ Pengguna dapat bertukar pesan (chat) terhadap sesama klien yang sama-sama sudah 
 
 Kata kunci yang digunakan antara lain,
 1. GROUP-CREATE *[nama_grup]* : Digunakan untuk membuat grup obrolan baru
-2. GROUP-DELETE : Digunakan untuk menghapus grup obrolan. Pengguna yang menggunakan fitur ini harus terotorisasi sebagai admin dalam grup yang ingin dihapus
+2. GROUP-GET : Digunakan untuk mendapatkan daftar grup yang telah bergabung
 3. GROUP-JOIN *[kode_grup]* : Digunakan untuk bergabung pada grup obrolan
-5. GROUP-EXIT *[kode_grup]* : Digunakan untuk keluar dari grup obrolan.
-6. GROUP-INVITE *[kode_grup]* *[nama_teman 1..N]* : Digunakan untuk mengundang pengguna lain untuk masuk kedalam grup. Pengguna yang menggunakan fitur ini harus terotorisasi sebagai admin grup untuk mengundang pengguna lain
-7. CHAT-SEND-PRIVATE : Digunakan untuk melakukan chat pada pengguna lain
-8. CHAT-SEND-GROUP : Digunakan untuk melakukan chat pada grup obrolan. Obrolan hanya bisa dikirim di grup dimana pengguna merupakan member dari grup.
-9. CHAT-GET-PRIVATE : Digunakan untuk menampilkan isi inbox dari obrolan yang belum difetch
-10. CHAT-GET-GROUP : Digunakan untuk menampilkan isi inbox dari obrolan grupp yang belum difetch. Obrolan hanya bisa diambil di grup dimana pengguna merupakan member dari grup.
-11. FILE-SEND-PRIVATE : Digunakan untuk bertukar file dengan pengguna lain
-12. FILE-SEND-GROUP : Digunakan untuk mengirim file dalam grup
-13. FILE-GET-PRIVATE : Digunakan untuk melakukan retrieve pada file yang dikirim oleh pengguna lain. 
-14. FILE-GET-GROUP : Digunakan untuk melakukan retrieve pada file yg dikirim di grup
-13. FRIEND-ADD : Digunakan untuk menjadikan pengguna lain sebagai teman
-14. FRIEND-DELETE : Digunakan untuk menghapus pengguna lain sebagai teman
-15. NOTIF-GET : Digunakan untuk menampilkan pesan-pesan yang belum di retrieve 
-16. PERSONAL : Digunakan untuk menampilkan id dari pengguna
+4. GROUP-EXIT *[kode_grup]* : Digunakan untuk keluar dari grup obrolan.
+5. GROUP-INVITE *[kode_grup]* *[nama_teman 1..N]* : Digunakan untuk mengundang pengguna lain untuk masuk kedalam grup. Pengguna yang menggunakan fitur ini harus terotorisasi sebagai admin grup untuk mengundang pengguna lain
 
-Argumen-argumen yang dibutuhkan untuk masing-masing kata kunci antara lain,
-6. CHAT-PRIVATE-SEND [id_penggunateman] [pesan]
-7. CHAT-PRIVATE-GET [id_penggunateman]
-8. CHAT-GROUP-GET [group_id]
-9. CHAT-GROUP-SEND [group_id] [pesan]
-10. FILE-PRIVATE-SEND [id_penggunateman] [path_file] [ukuran_file]
-11. FILE-GROUP-SEND [group_id] [path_file] [ukuran_file]
-12. FILE-PRIVATE-GET [id_penggunateman] [kode_file]
-13. FILE-GROUP-GET [id_group] [kode_file]
-14. FRIEND-ADD [nama_pengguna]
-15. FRIEND-DELETE [nama_pengguna]
+6. CHAT-PRIVATE-SEND *[id_penggunateman* *[pesan]* : Digunakan untuk melakukan chat pada pengguna lain
+7. CHAT-GROUP-SEND *[group_id]* *[pesan]* : Digunakan untuk melakukan chat pada grup obrolan. Obrolan hanya bisa dikirim di grup dimana pengguna merupakan member dari grup.
+8. CHAT-PRIVATE-GET *[id_penggunateman]* : Digunakan untuk menampilkan isi inbox dari obrolan yang belum difetch
+9. CHAT-GROUP-GET *[group_id]* : Digunakan untuk menampilkan isi inbox dari obrolan grupp yang belum difetch. Obrolan hanya bisa diambil di grup dimana pengguna merupakan member dari grup.
+10. FILE-SEND-PRIVATE [id_penggunateman] [path_file] [ukuran_file] : Digunakan untuk bertukar file dengan pengguna lain
+11. FILE-SEND-GROUP [group_id] [path_file] [ukuran_file] : Digunakan untuk mengirim file dalam grup
+12. FILE-GET-PRIVATE [id_penggunateman] [kode_file] : Digunakan untuk melakukan retrieve pada file yang dikirim oleh pengguna lain. 
+13. FILE-GET-GROUP [id_group] [kode_file] : Digunakan untuk melakukan retrieve pada file yg dikirim di grup
+14. CONTACT-ADD *[nama_pengguna]* : Digunakan untuk menjadikan pengguna lain sebagai teman
+15. CONTACT-GET : Digunakan untuk mendapatkan daftar teman
+16. CONTACT-DELETE *[nama_pengguna]* : Digunakan untuk menghapus pengguna lain sebagai teman
+17. NOTIF-GET : Digunakan untuk menampilkan pesan-pesan yang belum di retrieve

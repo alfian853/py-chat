@@ -51,6 +51,9 @@ class ContactActivity(AbstractActivity):
         elif args[0] == 'back':
             self.go_to_prev_activity()
 
+        else:
+            self.show_menu()
+
     def _add_contact(self, args: list):
         request = dict()
         request['COMMAND'] = 'CONTACT-ADD'
@@ -71,7 +74,7 @@ class ContactActivity(AbstractActivity):
                 for contact in contacts:
                     print(str(i)+'.', contact)
                     i += 1
-            elif response['FOR'] == 'CONTACT-ADD':
+            elif response['FOR'] == 'CONTACT-ADD' or response['FOR'] == 'CONTACT-DEL':
                 print(response['message'])
             else:
                 super().response_handler(response, is_json)
