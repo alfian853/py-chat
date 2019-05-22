@@ -38,7 +38,7 @@ Server harus merespon semua request klien yang tidak valid dengan status "failed
 - back -> kembali ke menu utama
 
 4. Menu Grup
-- create [group-name] [group-code (optional)]-> membuat grup baru
+- create [group-name]-> membuat grup baru
 - get -> mendapatkan daftar grup yang telah tergabung
 - chat [nomor-group dalam daftar] -> masuk ke group chat
 - back -> kembali ke menu utama

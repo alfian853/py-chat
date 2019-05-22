@@ -31,6 +31,7 @@ class GroupMenuActivity(AbstractActivity):
     def show_menu(self):
         print('========Instruction=======')
         print('create <group_name>  # create a group')
+        print('join <code> # join to group with code')
         print('get  # get numbered list of joined group')
         print('chat <group order number in list> enter group chat room')
         print('back # back to main menu')
@@ -41,22 +42,32 @@ class GroupMenuActivity(AbstractActivity):
 
         if args[0] == 'create':
             # print('args: ' + str(args[0:]))
-            if args[2] is None:
-                self.send_request({
+            # if args[2] is None:
+            #     self.send_request({
+            #         'COMMAND': 'GROUP-CREATE',
+            #         'group_name': args[1]
+            #         })
+            # else: # check if group code available
+            #     # print ('code client:' + str(args[2]))
+            #     self.send_request({
+            #         'COMMAND': 'GROUP-CREATE',
+            #         'group_name': args[1],
+            #         'code': args[2]
+            #         })
+            self.send_request({
                     'COMMAND': 'GROUP-CREATE',
                     'group_name': args[1]
-                    })
-            else: # check if group code available
-                # print ('code client:' + str(args[2]))
-                self.send_request({
-                    'COMMAND': 'GROUP-CREATE',
-                    'group_name': args[1],
-                    'code': args[2]
                     })
 
         elif args[0] == 'get':
             self.send_request({
                 'COMMAND': 'GROUP-GET'
+            })
+
+        elif args[0] == 'join':
+            self.send_request({
+                'COMMAND': 'GROUP-JOIN',
+                'code': args[1]
             })
 
         elif args[0] == 'chat':
@@ -88,13 +99,12 @@ class GroupMenuActivity(AbstractActivity):
             if response['FOR'] == 'GROUP-GET':
                 groups = response['group_list']
                 self.groups = groups
-                print (groups)
+                if len(groups) == 0:
+                    print('you are not joined to any group')
                 # i = 1
                 for i in range(len(groups)):
                     # print(str(i)+'.', group['group_name'])
-                    print("{}. {}".format(i+1, groups[i]))
+                    print("{}. {}".format(i, groups[i]))
                     # i += 1
-            elif response['FOR'] == 'GROUP-INVITE':
-                print(response['message'])
-            elif response['FOR'] == 'GROUP-CREATE':
+            elif response['FOR'] == 'GROUP-INVITE' or response['FOR'] == 'GROUP-CREATE' or response['FOR'] == 'GROUP-JOIN':
                 print(response['message'])
