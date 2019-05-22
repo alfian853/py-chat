@@ -43,10 +43,11 @@ class GroupMenuActivity(AbstractActivity):
         args = args.split(' ')
 
         if args[0] == 'create':
+
             self.send_request({
-                    'COMMAND': 'GROUP-CREATE',
-                    'group_name': args[1]
-                    })
+                'COMMAND': 'GROUP-CREATE',
+                'group_name': ' '.join(args[1:])
+            })
 
         elif args[0] == 'get':
             self.send_request({
@@ -67,8 +68,8 @@ class GroupMenuActivity(AbstractActivity):
             group = self.groups[int(args[1])]
             next_activity = GroupChatActivity.get_instance(self.connection, self.activity_container)
             next_activity.group_name = group['group_name']
-            next_activity.group_id = group['id']
-            next_activity.init_chat_room(group['id'])
+            next_activity.group_code = group['code']
+            next_activity.init_chat_room(group['code'])
             next_activity.set_from_activity(self)
             self.move_activity(next_activity)
 
@@ -101,8 +102,6 @@ class GroupMenuActivity(AbstractActivity):
                     # print(str(i)+'.', group['group_name'])
                     print("{}. {}".format(i, groups[i]))
                     # i += 1
-            # elif response['FOR'] == 'GROUP-INVITE' or response['FOR'] == 'GROUP-CREATE' or response['FOR'] == 'GROUP-JOIN':
-            #     print(response['message'])
             else:
-                print(response['message'])
+                super().response_handler(response, is_json)
 

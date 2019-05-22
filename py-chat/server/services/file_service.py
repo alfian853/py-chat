@@ -37,7 +37,7 @@ class FileService:
                 self._handle_get_file(session, request)
 
     def _handle_group_send_file(self, session: Session, request):
-        group_entity: GroupEntity = self.group_repository.find_by_id(request['group_id'])
+        group_entity: GroupEntity = self.group_repository.find_by_code(request['code'])
 
         if session.user.username in group_entity.members:
             pass

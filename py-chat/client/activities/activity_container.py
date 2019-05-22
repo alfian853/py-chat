@@ -17,8 +17,11 @@ class ActivityContainer(threading.Thread):
 
     def run_activity(self):
         print(self.activity.__class__)
-        commands = input(self.activity.get_activity_input_line()+'\n')
-        self.activity.handle_input(commands)
+        try:
+            commands = input(self.activity.get_activity_input_line()+'\n')
+            self.activity.handle_input(commands)
+        except Exception as e:
+            traceback.print_exc()
 
     def run(self):
         while True:

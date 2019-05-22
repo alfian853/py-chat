@@ -25,7 +25,6 @@ class GroupService:
         elif commands[0] == 'EXIT': 
             self._exit_group(session, request)
 
-
     def _handle_invite(self, session, request):
         request_code = request['code']
         group = self.group_repository.find_by_code(request_code)
@@ -38,11 +37,11 @@ class GroupService:
                 'FOR': 'GROUP-INVITE',
                 'status': 'failed',
                 'message': 'you are not belong to this group'
-            });
+            })
 
         else:
             group_invite = {
-                'id': group_code,
+                'code': group_code,
                 'group_name': group_name
             }
 
@@ -59,13 +58,13 @@ class GroupService:
                     'FOR': 'GROUP-INVITE',
                     'status': 'success',
                     'message': name + ' has joined this group'
-                    });
+                    })
                 else:
                     session.send_response({
                     'FOR': 'GROUP-INVITE',
                     'status': 'failed',
                     'message': name + ' failed to join this group'
-                    });
+                    })
 
             if len(new_member) > 0:
                 group_members.extend(new_member)
@@ -74,13 +73,13 @@ class GroupService:
                         'FOR': 'GROUP-INVITE',
                         'status': 'success',
                         'message': 'new members have been added'
-                });
+                })
             else:
                 session.send_response({
                         'FOR': 'GROUP-INVITE',
                         'status': 'failed',
                         'message': 'no member added'
-                });
+                })
 
     def _get_group_list(self, session: Session, request):
         user_entity: UserEntity = self.user_repository.find_by_username(session.user.username)
@@ -108,7 +107,7 @@ class GroupService:
         user_group_list = session.user.group_list
 
         user_group_append = {
-            'id': unique_code,
+            'code': unique_code,
             'group_name': group_name
         }
     
@@ -124,7 +123,7 @@ class GroupService:
             'FOR': 'GROUP-CREATE',
             'status': 'success',
             'message': 'group has been created'
-        });
+        })
 
     def _join_group(self, session: Session, request):
         request_code = request['code']
@@ -143,7 +142,7 @@ class GroupService:
 
             user_group = session.user.group_list
             user_group_append = {
-                'id': group_code,
+                'code': group_code,
                 'group_name': group_name
             }
             user_group.append(user_group_append)
@@ -153,14 +152,14 @@ class GroupService:
                 'FOR': 'GROUP-JOIN',
                 'status': 'success',
                 'message': 'you have joined this group'
-            });
+            })
 
         else:
             session.send_response({
                 'FOR': 'GROUP-JOIN',
                 'status': 'failed',
                 'message': 'group code is invalid'
-            });
+            })
 
     def _exit_group(self, session: Session, request):
         request_code = request['code']
@@ -174,27 +173,27 @@ class GroupService:
 
                 user_group_list = session.user.group_list
                 for i in range(len(user_group_list)):
-                    if user_group_list[i]['id'] == request_code:
+                    if user_group_list[i]['code'] == request_code:
                         del user_group_list[i]
                         break
 
                 self.user_repository.save(session.user)
 
                 session.send_response({
-                'FOR': 'GROUP-EXIT',
-                'status': 'success',
-                'message': 'you have left this group'
-            });
+                    'FOR': 'GROUP-EXIT',
+                    'status': 'success',
+                    'message': 'you have left this group'
+                })
             else:
                 session.send_response({
-                'FOR': 'GROUP-EXIT',
-                'status': 'failed',
-                'message': 'you are not belong to this group'
-            });
+                    'FOR': 'GROUP-EXIT',
+                    'status': 'failed',
+                    'message': 'you are not belong to this group'
+                })
         else:
             session.send_response({
                 'FOR': 'GROUP-EXIT',
                 'status': 'failed',
                 'message': 'group is not available'
-            });
+            })
 

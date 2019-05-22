@@ -78,7 +78,7 @@ class ChatService:
 
     def _msg_group_send_handler(self, session: Session, request):
 
-        group_entity: GroupEntity = self.group_repository.find_by_id(request['group_id'])
+        group_entity: GroupEntity = self.group_repository.find_by_code(request['code'])
 
         if session.user.username in group_entity.members:
             pass
@@ -117,7 +117,7 @@ class ChatService:
         self.group_repository.save(group_entity)
 
     def _msg_group_get_handler(self, session: Session, request):
-        group_entity: GroupEntity = self.group_repository.find_by_id(request['group_id'])
+        group_entity: GroupEntity = self.group_repository.find_by_code(request['code'])
 
         if session.user.username in group_entity.members:
             session.send_response({

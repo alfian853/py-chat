@@ -10,7 +10,7 @@ class GroupChatActivity(AbstractActivity):
 
     def __init__(self, connection):
         super().__init__(connection)
-        self.group_id = None
+        self.group_code = None
         self.group_name = None
         self.last_message = None
         self.last_file_name = None
@@ -31,11 +31,11 @@ class GroupChatActivity(AbstractActivity):
         print('group  # go to group menu')
         print('list  # get inbox')
 
-    def init_chat_room(self, group_id):
-        self.group_id = group_id
+    def init_chat_room(self, group_code):
+        self.group_code = group_code
         request = dict()
         request['COMMAND'] = 'MSG-GROUP-GET'
-        request['group_id'] = self.group_id
+        request['code'] = self.group_code
         self.send_request(request)
 
     def handle_input(self, args):
@@ -85,7 +85,7 @@ class GroupChatActivity(AbstractActivity):
                 print(response)
 
     def send_request(self, request):
-        request['group_id'] = self.group_id
+        request['code'] = self.group_code
         super().send_request(request)
 
     def _send_file(self):
@@ -102,7 +102,7 @@ class GroupChatActivity(AbstractActivity):
 
         request = dict()
         request['COMMAND'] = 'FILE-GROUP-SEND'
-        request['group_id'] = self.group_id
+        request['code'] = self.group_code
         request['file_name'] = self.last_file_name
         request['file_size'] = os.path.getsize(self.last_file_name)
         self.send_request(request)

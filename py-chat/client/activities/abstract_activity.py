@@ -68,6 +68,9 @@ class AbstractActivity(object):
                 else:
                     print('[New Message from '+response['from_user']+']:', response['text'])
             else:
-                print('unhandled response')
+                if 'message' in response.keys():
+                    print(response['message'])
+                # print('unhandled response')
+
         else:
             print('unhandled bytes response')

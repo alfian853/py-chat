@@ -1,5 +1,6 @@
 import socket
 import threading
+import traceback
 
 from activities.activity_container import ActivityContainer
 from activities import AuthActivity
@@ -21,7 +22,10 @@ class Client(threading.Thread):
 
     def run(self):
         while True:
-            self.activity_container.run_activity()
+            try:
+                self.activity_container.run_activity()
+            except Exception as e:
+                traceback.print_exc()
 
 
 if __name__ == '__main__':

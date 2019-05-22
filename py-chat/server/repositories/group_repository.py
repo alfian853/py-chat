@@ -14,8 +14,10 @@ class GroupRepository(AbstractRepository):
             GroupRepository.instance = GroupRepository()
         return GroupRepository.instance
 
-    def find_by_id(self, id: str) -> GroupEntity:
-        obj = super().find_by_id(id)
+    def find_by_code(self, code: str) -> GroupEntity:
+        obj = self.db.find_one({
+            'code': code
+        })
 
         if obj is None:
             return None

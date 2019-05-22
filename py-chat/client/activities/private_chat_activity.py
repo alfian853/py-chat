@@ -57,7 +57,6 @@ class PrivateChatActivity(AbstractActivity):
             self.go_to_prev_activity()
 
     def response_handler(self, response, is_json):
-        print(response)
         if is_json:
             if response['FOR'] == 'MSG-PRIVATE-GET':
                 for message in response['messages']:

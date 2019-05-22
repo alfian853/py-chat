@@ -21,7 +21,7 @@ class AbstractRepository:
             )
         self.db = AbstractRepository.mongo_connection[Env.mongodb_database][entity_name]
 
-    def find_by_id(self, id: str) -> dict:
+    def find_by_code(self, id: str) -> dict:
         return self.db.find_one({
             '_id': ObjectId(id)
         })
