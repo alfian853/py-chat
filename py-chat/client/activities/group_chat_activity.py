@@ -39,7 +39,7 @@ class GroupChatActivity(AbstractActivity):
         self.send_request(request)
 
     def handle_input(self, args):
-        args = args.split(' ', 2)
+        args = args.split(' ', 1)
         request = dict()
         if args[0] == 'send':
             request['COMMAND'] = 'MSG-GROUP-SEND'
