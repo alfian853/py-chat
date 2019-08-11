@@ -26,9 +26,10 @@ class PrivateChatActivity(AbstractActivity):
 
     def show_menu(self):
         print('========Instruction=======')
-        print('contact  # go to contact menu')
-        print('group  # go to group menu')
-        print('list  # get inbox')
+        print('send <message>  # send message to friend')
+        print('send_file <file_name>  # send a file to friend')
+        print('get_file <kode_file> # get file based on unique code')
+        print('======================\n')
 
     def init_chat_room(self, partner_username):
         self.partner_user = partner_username
@@ -56,6 +57,8 @@ class PrivateChatActivity(AbstractActivity):
             pass
         elif args[0] == 'back':
             self.go_to_prev_activity()
+        else:
+            self.show_menu()
 
     def response_handler(self, response, is_json):
         if is_json:
